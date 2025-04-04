@@ -1,3 +1,7 @@
 [workspace]
 resolver = "3"
-members = ["starforge-comp", "starforge-config", "starforge-input", "starforge-plugins", "starforge-render", "starforge-shell"]
+members = ["starforge-comp", "starforge-config", "starforge-core", "starforge-plugins", "starforge-render", "starforge-shell"]
+
+[workspace.dependencies]
+smithay = { version = "0.5.1", features = ["use_system_lib"] }
+tracing = "0.1.41"
