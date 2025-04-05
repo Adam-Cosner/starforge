@@ -3,7 +3,8 @@
 use crate::state::{StarforgeClientState, StarforgeState};
 use smithay::reexports::wayland_server::protocol::wl_buffer::WlBuffer;
 use smithay::{
-    delegate_compositor, delegate_data_device, delegate_output, delegate_shm, delegate_xdg_shell,
+    delegate_compositor, delegate_data_device, delegate_output, delegate_seat, delegate_shm,
+    delegate_xdg_shell,
     input::{SeatHandler, SeatState},
     reexports::wayland_server::{
         Client,
@@ -88,6 +89,8 @@ impl XdgShellHandler for StarforgeState {
 // Delegate the XDG shell protocol implementation to our handler
 delegate_xdg_shell!(StarforgeState);
 
+// Wl Seat
+
 impl SeatHandler for StarforgeState {
     type KeyboardFocus = WlSurface;
     type PointerFocus = WlSurface;
@@ -97,6 +100,8 @@ impl SeatHandler for StarforgeState {
         &mut self.seat_state
     }
 }
+
+delegate_seat!(StarforgeState);
 
 impl ClientDndGrabHandler for StarforgeState {}
 

@@ -16,7 +16,7 @@ pub fn init_winit(
     let display_handle = &mut state.dh;
 
     // Initialize Winit backend for a test window
-    let (backend, winit) = winit::init::<GlesRenderer>()?;
+    let (mut backend, winit) = winit::init::<GlesRenderer>()?;
 
     let mode = Mode {
         size: backend.window_size(),
@@ -35,7 +35,7 @@ pub fn init_winit(
     let _global = output.create_global::<StarforgeState>(display_handle);
     output.change_current_state(
         Some(mode),
-        Some(Transform::Flipped180),
+        Some(Transform::Normal),
         None,
         Some((0, 0).into()),
     );
@@ -58,8 +58,11 @@ pub fn init_winit(
                 ),
                 WinitEvent::Input(event) => {}
                 WinitEvent::Redraw => {
-                    // Ask for redraw to schedule new frame.
+                    backend.bind().unwrap();
+
+                    backend.submit(None).unwrap();
                     backend.window().request_redraw();
+                    let _ = display.flush_clients();
                 }
                 WinitEvent::CloseRequested => state.loop_signal.stop(),
                 _ => {}

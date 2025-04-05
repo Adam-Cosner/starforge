@@ -9,4 +9,5 @@ starforge-core = { path = "../starforge-core" }
 
 # Inherited dependencies from the workspace
 smithay = { workspace = true }
+wgpu = "0.20.1"
 thiserror = { workspace = true }

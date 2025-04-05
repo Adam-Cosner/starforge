@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     winit::init_winit(&mut event_loop, &mut compositor_state)?;
     info!("Winit backend initialized");
 
-    event_loop.run(None, &mut compositor_state, move |_| {
+    event_loop.run(None, &mut compositor_state, move |_state| {
         // Starforge is running
     })?;
 
