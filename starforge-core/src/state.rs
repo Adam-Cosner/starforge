@@ -1,10 +1,8 @@
 //! Core state management for the Starforge compositor.
 
 use crate::StarforgeResult;
-use smithay::input::Seat;
 use smithay::{
-    desktop::{Space, Window},
-    input::SeatState,
+    input::{Seat, SeatState},
     reexports::{
         calloop::{EventLoop, LoopSignal},
         wayland_server::{
@@ -20,6 +18,7 @@ use smithay::{
         shm::ShmState,
     },
 };
+use std::sync::Arc;
 
 /// The core state of a Starforge compositor.
 ///
