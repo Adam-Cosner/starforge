@@ -13,6 +13,8 @@ pub enum StarforgeError {
     WaylandServerInitError(#[from] wayland_server::backend::InitError),
     #[error("Calloop Winit Insert Error: {0}")]
     CalloopWinitInsertError(#[from] calloop::InsertError<WinitEventLoop>),
+    #[error("Renderer Error: {0}")]
+    RendererError(String),
 }
 
 /// Result type for Starforge

@@ -8,6 +8,7 @@ use smithay::{
     utils::Transform,
 };
 use starforge_core::{StarforgeResult, StarforgeState};
+use starforge_render::StarforgeRenderer;
 
 pub fn init_winit(
     event_loop: &mut EventLoop<StarforgeState>,
@@ -40,6 +41,8 @@ pub fn init_winit(
         Some((0, 0).into()),
     );
     output.set_preferred(mode);
+
+    let renderer = StarforgeRenderer::new()?;
 
     event_loop
         .handle()

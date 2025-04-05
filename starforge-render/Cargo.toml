@@ -9,4 +9,6 @@ starforge-core = { path = "../starforge-core" }
 
 # Inherited dependencies from the workspace
 smithay = { workspace = true }
-thiserror = { workspace = true }
+tracing = { workspace = true }
+ash = { version = "0.38" }
+vk-mem = { version = "0.4.0" }
