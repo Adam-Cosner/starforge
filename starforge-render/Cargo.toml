@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+# Local dependencies
+starforge-core = { path = "../starforge-core" }
+
+# Inherited dependencies from the workspace
+smithay = { workspace = true }
+thiserror = { workspace = true }

@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+# Inherited dependencies from the workspace
+thiserror = { workspace = true }
+
+# Crate dependencies
+toml = "0.8.20"
+serde = { version = "1.0", features = ["derive"] }

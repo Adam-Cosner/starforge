@@ -5,3 +5,4 @@ members = ["starforge-comp", "starforge-config", "starforge-core", "starforge-pl
 [workspace.dependencies]
 smithay = { version = "0.5.1", features = ["use_system_lib"] }
 tracing = "0.1.41"
+thiserror = "2.0.12"
