@@ -2,8 +2,10 @@
 //!
 //! This library provides a modular, extensible Vulkan rendering pipeline
 
+use ash::vk;
 use smithay::reexports::rustix::path::Arg;
-use starforge_core::StarforgeResult;
+use smithay::utils::Size;
+use starforge_core::{StarforgeError, StarforgeResult};
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
@@ -22,16 +24,54 @@ use crate::{
     core::Context,
     //pipeline::PipelineCache,
     //resources::ResourceManager,
-    swapchain::{OutputId /*, OutputSwapchain, SwapchainConfig, PresentInfo*/},
+    swapchain::{OutputId, OutputSwapchain, SwapchainConfig /*, PresentInfo*/},
 };
+
+pub struct DmaBufImportInfo {
+    pub fd: std::os::unix::io::RawFd,
+    pub width: u32,
+    pub height: u32,
+    pub format: vk::Format,
+    pub modifier: u64,
+}
+
+pub struct SurfaceCreateInfo {
+    pub handles: RawHandles,
+}
+
+pub enum RawHandles {
+    Winit {
+        display: *mut std::ffi::c_void,
+        window: *mut std::ffi::c_void,
+    },
+    Drm {
+        // todo
+    },
+}
+
+pub enum RenderElement {
+    ClientSurface {
+        //texture_id: TextureId,
+        position: (i32, i32),
+        size: (u32, u32),
+        damage: Vec<(i32, i32, u32, u32)>, // Damage regions in surface coordinates
+        color_space: vk::ColorSpaceKHR,
+        eotf: vk::Format,
+    },
+    SolidColor {
+        rect: (i32, i32, u32, u32), // Position and size
+        color: [f32; 4],            // RGBA color
+    },
+    // Other elements: cursor, background image, UI panels, etc...
+}
 
 /// The core rendering context for Starforge
 pub struct StarforgeRenderer {
     /// The Vulkan context
     context: Arc<Context>,
-    //// Per-output state managers
-    //outputs: RwLock<HashMap<OutputId, OutputSwapchain>>,
 
+    /// Per-output state managers
+    outputs: RwLock<HashMap<OutputId, OutputSwapchain>>,
     //// Central resource manager
     //resource_manager: ResourceManager,
 
@@ -52,7 +92,7 @@ impl StarforgeRenderer {
 
         Ok(Self {
             context,
-            //outputs: RwLock::new(HashMap::new()),
+            outputs: RwLock::new(HashMap::new()),
             //resource_manager,
             //pipeline_cache,
         })
@@ -61,26 +101,30 @@ impl StarforgeRenderer {
     /// Register an output with the renderer
     pub fn register_output(
         &self,
-        id: OutputId, /*, create_info: SurfaceCreateInfo*/
+        id: OutputId,
+        create_info: SurfaceCreateInfo,
+        initial_config: SwapchainConfig,
     ) -> StarforgeResult<()> {
-        //let swapchain = OutputSwapchain::new(self.context.clone(), create_info)?;
-        //self.outputs.write().unwrap().insert(id, swapchain);
+        let swapchain = OutputSwapchain::new(self.context.clone(), create_info, initial_config)?;
+        self.outputs.write().unwrap().insert(id, swapchain);
         Ok(())
     }
 
     /// Trigger reconfiguration for an output
-    pub fn configure_output(
-        &self,
-        id: OutputId, /*, config: SwapchainConfig*/
-    ) -> StarforgeResult<()> {
-        //let swapchain = self.outputs.write().unwrap().get_mut(&id).ok_or(StarforgeError::OutputNotFound)?;
-        //swapchain.configure(config)?;
+    pub fn configure_output(&self, id: OutputId, config: SwapchainConfig) -> StarforgeResult<()> {
+        // let swapchain = self
+        //     .outputs
+        //     .write()
+        //     .unwrap()
+        //     .get_mut(&id)
+        //     .ok_or(StarforgeError::OutputNotFound)?;
+        //swapchain.reconfigure(config)?;
         Ok(())
     }
 
     /// Unregister an output
     pub fn unregister_output(&self, id: OutputId) -> StarforgeResult<()> {
-        //self.outputs.write().unwrap().remove(&id);
+        self.outputs.write().unwrap().remove(&id);
         Ok(())
     }
 

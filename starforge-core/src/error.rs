@@ -15,6 +15,8 @@ pub enum StarforgeError {
     CalloopWinitInsertError(#[from] calloop::InsertError<WinitEventLoop>),
     #[error("Renderer Error: {0}")]
     RendererError(String),
+    #[error("Output Not Found")]
+    OutputNotFound,
 }
 
 /// Result type for Starforge

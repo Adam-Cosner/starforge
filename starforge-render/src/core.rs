@@ -21,15 +21,15 @@ struct ValidationLayers {
 
 pub struct Context {
     // Keeps the entry point alive
-    _entry: ash::Entry,
-    instance: ash::Instance,
+    pub(crate) _entry: ash::Entry,
+    pub(crate) instance: ash::Instance,
     validation: Option<ValidationLayers>, // Holds validation state if enabled
 
     physical_device: vk::PhysicalDevice,
     physical_device_properties: vk::PhysicalDeviceProperties,
 
     // The primary handle for interaction with the GPU
-    device: ash::Device,
+    pub(crate) device: ash::Device,
     // Queues obtained from the logical device
     graphics_queue: QueueInfo,
     compute_queue: Option<QueueInfo>,
